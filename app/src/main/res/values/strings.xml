@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Guardião</string>
+    <string name="service_desc">Bloqueia aplicativos e sites não autorizados.</string>
+</resources>
