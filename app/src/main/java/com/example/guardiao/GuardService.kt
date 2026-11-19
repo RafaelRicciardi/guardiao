@@ -45,14 +45,14 @@ class GuardService : AccessibilityService() {
         }
     }
 
-    private fun checkBrowser(pkg: String) {
+      private fun checkBrowser(pkg: String) {
         val root = rootInActiveWindow ?: return
         if (root.packageName?.toString() != pkg) return
         val bar = root.findAccessibilityNodeInfosByViewId(urlBarIds[pkg]!!).firstOrNull() ?: return
-        if (bar.isFocused || bar.isShowingHintText) return   // usuário digitando / página inicial
-        val text = bar.text?.toString().orEmpty().trim()
-        if (text.isEmpty()) return
-        if (!Prefs.isAllowed(this, text)) deny("Site não autorizado")
+        if (bar.isFocused || bar.isShowingHintText) return
+        val host = Prefs.normalizeHost(bar.text?.toString().orEmpty())
+        if (host.isEmpty()) return   // não parece um endereço (página inicial, dica, etc.)
+        if (!Prefs.isAllowed(this, host)) deny("Bloqueado: $host")
     }
 
     /** Impede desativar o serviço / desinstalar o app pelas Configurações sem a senha. */
