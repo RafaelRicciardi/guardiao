@@ -25,6 +25,7 @@ class GuardService : AccessibilityService() {
             .addCategory(Intent.CATEGORY_BROWSABLE)
         packageManager.queryIntentActivities(intent, PackageManager.MATCH_ALL)
             .map { it.activityInfo.packageName }
+            .filterNot { it.startsWith("com.sec.android.app.sbrowser") || it.startsWith("com.samsung.") }
             .toSet() - urlBarIds.keys - packageName
     }
 
@@ -38,7 +39,7 @@ class GuardService : AccessibilityService() {
 
         when {
             pkg in Prefs.blocked(this) -> if (stateChanged) deny("Aplicativo bloqueado")
-            pkg in unverifiableBrowsers -> if (stateChanged) deny("Navegador não permitido")
+            pkg in unverifiableBrowsers -> if (stateChanged) deny("Navegador não permitido: $pkg")
             pkg in urlBarIds -> checkBrowser(pkg)
             pkg == "com.android.settings" ||
                 pkg.endsWith(".packageinstaller") -> checkSettings()
