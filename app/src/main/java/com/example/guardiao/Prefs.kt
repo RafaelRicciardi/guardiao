@@ -78,4 +78,7 @@ object Prefs {
         if (host.isEmpty()) return false
         return domains(c).any { host == it || host.endsWith(".$it") }
     }
+
+    fun setLast(c: Context, s: String) = sp(c).edit().putString("last", s).apply()
+    fun last(c: Context): String = sp(c).getString("last", "(nenhum ainda)")!!
 }
