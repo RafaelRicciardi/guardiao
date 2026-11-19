@@ -15,8 +15,14 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 8.7
+      - name: Localizar projeto
+        run: |
+          F=$(find . -name settings.gradle.kts -not -path './.git/*' | head -n1)
+          echo "Encontrado: $F"
+          echo "DIR=$(dirname "$F")" >> $GITHUB_ENV
       - run: gradle assembleDebug
+        working-directory: ${{ env.DIR }}
       - uses: actions/upload-artifact@v4
         with:
           name: guardiao-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: ${{ env.DIR }}/app/build/outputs/apk/debug/app-debug.apk
