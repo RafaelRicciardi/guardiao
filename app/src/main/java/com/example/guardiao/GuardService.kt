@@ -30,11 +30,13 @@ class GuardService : AccessibilityService() {
     }
 
     private var lastDeny = 0L
+    private var currentPkg = ""
 
     override fun onAccessibilityEvent(e: AccessibilityEvent?) {
         val event = e ?: return
         val pkg = event.packageName?.toString() ?: return
         if (pkg == packageName) return
+        currentPkg = pkg
         val stateChanged = event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED
 
         when {
@@ -68,6 +70,7 @@ class GuardService : AccessibilityService() {
         val now = System.currentTimeMillis()
         if (now - lastDeny < 700) return
         lastDeny = now
+        Prefs.setLast(this, "$msg [pacote: $currentPkg]")
         performGlobalAction(GLOBAL_ACTION_HOME)
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
