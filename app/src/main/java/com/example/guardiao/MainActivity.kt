@@ -112,6 +112,7 @@ class MainActivity : Activity() {
         })
 
         // Administrador do dispositivo (dificulta desinstalar)
+        root.addView(label("Último bloqueio: " + Prefs.last(this)))
         val dpm = getSystemService(DEVICE_POLICY_SERVICE) as DevicePolicyManager
         val admin = ComponentName(this, AdminReceiver::class.java)
         if (!dpm.isAdminActive(admin)) root.addView(button("Ativar proteção contra desinstalação") {
